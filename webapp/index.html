@@ -2,18 +2,33 @@
 <head>
     <title>CSV2IFF Converter</title>
     <script src="mainPage.js"></script>
+    <link rel="stylesheet" href="mainpage.css">
 </head>
 <body>
-    <h1>CSV to IFF Converter</h1>
+    <div class="headerdiv">
+        <h1>CSV2IFF Converter</h1>
+    </div>
     <br>
-
-    <form onsubmit=false id="submission-form">
-        Employee Name: <br><input type="text" name = "ename" required> <br>Please enter as Last, First.<br>
-        Start Date: <br><input type="text" name="sdate" required> <br>Please enter as "MM/dd/yyyy"<br>
-        End Date <br><input type="text" name="edate" required> <br>Note that these dates are inclusive.<br>
-        Upload CSV File: <br><input type="file" name="csvfile" id="csvupload" accept=".csv" required><br>
-        <input type ="submit" name ="submit" value = "Submit"/>
-    </form>
+    <div class="formdiv">
+        <form onsubmit=false id="submission-form">
+            <p>Employee Name:</p><input type="text" name = "ename" required><p>Please enter as Last, First.</p>
+            <div class="dates">
+                <div class="datediv">
+                    <p>Start Date:</p><input type="text" name="sdate" required>
+                </div>
+                <br>
+                <div class="datediv">
+                    <p>End Date:</p><input type="text" name="edate" required>
+                </div>
+            </div>
+            <p>Please enter as "MM/dd/yyyy"</p>
+            <div class="bottombar">
+                <p>Note that these dates are inclusive.</p>
+            </div>
+            <p>Upload CSV File:</p><input type="file" name="csvfile" id="csvupload" accept=".csv" required class="left">
+            <input type ="submit" name ="submit" value = "Submit" class="right"/>
+        </form>
+    </div>
 </body>
 <script>
     attatchJsToForm("submission-form");
