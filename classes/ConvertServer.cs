@@ -51,9 +51,43 @@ namespace CSV2FLL {
                         await clientResp.OutputStream.WriteAsync(data, 0, data.Length);
                         clientResp.Close();
                     } else {
-                        //Add dynamic handling of GET requests based on the files cached.
-                        //Should allow for the files to easily be served based on what has 
-                        //been written in the webapp folder without having to hardcode it all.
+                        String[] temp = clientReq.Url.AbsolutePath.Split(".");
+                        String extension = temp[temp.Length - 1];
+                        String fileToServe = "";
+                        int fileLocation = -1;
+
+                        switch (extension) {
+                            case "ico":
+                            break;
+                            case "js":
+                            fileLocation = searchArray(this.webFiles, clientReq.Url.AbsolutePath);
+                            clientResp.ContentType = "text/js";
+                            break;
+                            case "css":
+                            fileLocation = searchArray(this.webFiles, clientReq.Url.AbsolutePath);
+                            clientResp.ContentType = "text/css";
+                            break;
+                            default:
+                            fileLocation = searchArray(this.webFiles, clientReq.Url.AbsolutePath + ".html");
+                            clientResp.ContentType = "text/html";
+                            break;
+                        }
+
+                        if (fileLocation == -1) {
+                            fileToServe = "Error: 404";
+                        } else {
+                            fileToServe = loadPageData(path + "\\webapp\\" + this.webFiles[fileLocation]);
+                        }
+
+                        byte[] data = Encoding.UTF8.GetBytes(fileToServe);
+                        clientResp.ContentEncoding = Encoding.UTF8;
+                        clientResp.ContentLength64 = data.LongLength;
+
+                        await clientResp.OutputStream.WriteAsync(data, 0, data.Length);
+                        clientResp.Close();
+                        //Dynamically handles pulling html, css, ico, and js files from the server by
+                        //Caching a list of files in the webapp folder and searching the GET queries
+                        //against it.
                     }
                 }
             }
@@ -74,7 +108,7 @@ namespace CSV2FLL {
             String[] output = new String[files.Length];
             for (int i = 0; i < files.Length; i++) {
                 String[] temp = files[i].Split("\\");
-                output[i] = temp[temp.Length - 1];
+                output[i] = "/" + temp[temp.Length - 1];
             }
 
             return output;
@@ -89,6 +123,21 @@ namespace CSV2FLL {
                 tempPath += updatedPath[i] + "\\";
             }
             return tempPath;
+        }
+
+        private int searchArray(String[] items, String query) {
+            for (int i = 0; i < items.Length; i++) {
+                if (items[i] == query) {
+                    return i;
+                }
+            }
+            Console.WriteLine("Could not find " + query + " in:");
+            String temp = "";
+            foreach (String item in items) {
+                temp += item + " ";
+            }
+            Console.WriteLine(temp);
+            return -1;
         }
 
     }
