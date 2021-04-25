@@ -92,9 +92,19 @@ namespace CSV2FLL
                 int[] startDate = Array.ConvertAll(startDateString, s => int.Parse(s));
                 int[] endDate = Array.ConvertAll(endDateString, s => int.Parse(s));
 
-                DateTime dataDate = new DateTime(readDataDate[2], readDataDate[0], readDataDate[1]);
-                DateTime trueStartDate = new DateTime(startDate[2], startDate[0], startDate[1]);
-                DateTime trueEndDate = new DateTime(endDate[2], endDate[0], endDate[1]);
+                DateTime dataDate = DateTime.Now;
+                DateTime trueStartDate = DateTime.Now;
+                DateTime trueEndDate = DateTime.Now;
+
+                try {
+                    dataDate = new DateTime(readDataDate[2], readDataDate[0], readDataDate[1]);
+                    trueStartDate = new DateTime(startDate[2], startDate[0], startDate[1]);
+                    trueEndDate = new DateTime(endDate[2], endDate[0], endDate[1]);
+                } catch (Exception e) {
+                    Console.WriteLine("An error has occured: " + e);
+                    culledData.totalHours = -1;
+                    return culledData;
+                }
 
                 if (startFound == false) {
                     if (dataDate >= trueStartDate) {
@@ -124,6 +134,9 @@ namespace CSV2FLL
         }
 
         public String generateIFF(EditedData workedDaysHours, String filelocation, String employee) {
+            if (workedDaysHours.totalHours == -1) {
+                return "An error has occured.";
+            }
             DateTime currentDate = DateTime.Now;
             String outputFileText = "!HDR   PROD    VER REL IIFVER  DATE    TIME    ACCNTNT     ACCNTNTSPLITTIME";
             outputFileText += "\nHDR  QuickBooks  Version    Release R1  1   " + currentDate.ToString("MM/dd/yyyy") + "   0  N   0";
@@ -135,11 +148,11 @@ namespace CSV2FLL
                 outputFileText += Math.Round(workedDaysHours.hoursPerDay[i], 2) + "   In Office Work   N";
             }
 
-            using (System.IO.FileStream fs = System.IO.File.Create(filelocation))
+            /*using (System.IO.FileStream fs = System.IO.File.Create(filelocation))
             {
                 byte[] info = new UTF8Encoding(true).GetBytes(outputFileText);
                 fs.Write(info, 0, info.Length);
-            }
+            }*/
 
             return outputFileText;
         }

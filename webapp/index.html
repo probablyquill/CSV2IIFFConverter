@@ -8,10 +8,10 @@
     <br>
 
     <form onsubmit=false id="submission-form">
-        Employee Name: <br><input type="text" name = "ename"> <br>Please enter as Last, First.<br>
-        Start Date: <br><input type="text" name="sdate"> <br>Please enter as "MM/dd/yyyy"<br>
-        End Date <br><input type="text" name="edate"> <br>Note that these dates are inclusive.<br>
-        Upload CSV File: <br><input type="file" name="csvfile" id="csvupload" accept=".csv"><br>
+        Employee Name: <br><input type="text" name = "ename" required> <br>Please enter as Last, First.<br>
+        Start Date: <br><input type="text" name="sdate" required> <br>Please enter as "MM/dd/yyyy"<br>
+        End Date <br><input type="text" name="edate" required> <br>Note that these dates are inclusive.<br>
+        Upload CSV File: <br><input type="file" name="csvfile" id="csvupload" accept=".csv" required><br>
         <input type ="submit" name ="submit" value = "Submit"/>
     </form>
 </body>
