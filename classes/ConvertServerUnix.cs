@@ -41,7 +41,7 @@ namespace CSV2FLL {
 
                 if (clientReq.HttpMethod == "GET") {
                     if (clientReq.Url.AbsolutePath == "/") {
-                        String pageInfo = loadPageData(path + "webapp/index.html");
+                        String pageInfo = loadPageData(path + "webapp//index.html");
                         byte[] data = Encoding.UTF8.GetBytes(pageInfo);
 
                         clientResp.ContentType = "text/html";
@@ -77,7 +77,7 @@ namespace CSV2FLL {
                             fileToServe = "Error: 404";
                             clientResp.ContentType = "text/html";
                         } else {
-                            fileToServe = loadPageData(path + "/webapp/" + this.webFiles[fileLocation]);
+                            fileToServe = loadPageData(path + "//webapp//" + this.webFiles[fileLocation]);
                         }
 
                         byte[] data = Encoding.UTF8.GetBytes(fileToServe);
@@ -98,7 +98,7 @@ namespace CSV2FLL {
                         
                         String[] splitData = dataSent.Split("|");
                         String csvText = splitData[splitData.Length - 1];
-                        String[] splitCSV = csvText.Split("\n");
+                        String[] splitCSV = csvText.Split("/n");
                         String filename = splitData[0].Replace(" ", "").Replace(",", "").ToLower();
                         filename += splitData[1].Replace("/", "") + "-" + splitData[2].Replace("/", "") + ".iff";
 
@@ -132,17 +132,17 @@ namespace CSV2FLL {
             String[] file = System.IO.File.ReadAllLines(@filepath);
             String output = "";
             foreach (String item in file) {
-                output += item + "\n";
+                output += item + "/n";
             }
             return output;
         }
 
         public String[] cacheHTML(String filePath) {
-            filePath = filePath + "/webapp/";
+            filePath = filePath + "//webapp//";
             String[] files = System.IO.Directory.GetFiles(filePath);
             String[] output = new String[files.Length];
             for (int i = 0; i < files.Length; i++) {
-                String[] temp = files[i].Split("/");
+                String[] temp = files[i].Split("//");
                 output[i] = "/" + temp[temp.Length - 1];
             }
 
@@ -151,11 +151,11 @@ namespace CSV2FLL {
 
         private String getPath() {
             String tempPath = System.IO.Path.GetFullPath("Program.cs");
-            String[] updatedPath = tempPath.Split("/");
+            String[] updatedPath = tempPath.Split("//");
             tempPath = "";
 
             for (int i = 0; i < updatedPath.Length - 1; i++) {
-                tempPath += updatedPath[i] + "/";
+                tempPath += updatedPath[i] + "//";
             }
             return tempPath;
         }
