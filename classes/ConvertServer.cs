@@ -75,6 +75,7 @@ namespace CSV2FLL {
 
                         if (fileLocation == -1) {
                             fileToServe = "Error: 404";
+                            clientResp.ContentType = "text/html";
                         } else {
                             fileToServe = loadPageData(path + "\\webapp\\" + this.webFiles[fileLocation]);
                         }
