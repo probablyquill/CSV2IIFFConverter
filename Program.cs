@@ -7,6 +7,7 @@ namespace CSV2FLL
         static void Main(string[] args)
         {
             ConvertServer server = new ConvertServer();
+            
             //CSVParser finalParser = new CSVParser();
             //TotalData dataFound = finalParser.parseData("Example.csv");
             //EditedData culledData = finalParser.cullData("3/1/2021", "5/16/2021", dataFound);
@@ -15,5 +16,7 @@ namespace CSV2FLL
 
             //finalParser.generateIFF(culledData, "output.iff", "");
         }
+
+        
     }
 }
