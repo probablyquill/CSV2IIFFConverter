@@ -123,7 +123,7 @@ namespace CSV2FLL
             return culledData;
         }
 
-        public void generateIFF(EditedData workedDaysHours, String filelocation, String employee) {
+        public String generateIFF(EditedData workedDaysHours, String filelocation, String employee) {
             DateTime currentDate = DateTime.Now;
             String outputFileText = "!HDR   PROD    VER REL IIFVER  DATE    TIME    ACCNTNT     ACCNTNTSPLITTIME";
             outputFileText += "\nHDR  QuickBooks  Version    Release R1  1   " + currentDate.ToString("MM/dd/yyyy") + "   0  N   0";
@@ -140,6 +140,8 @@ namespace CSV2FLL
                 byte[] info = new UTF8Encoding(true).GetBytes(outputFileText);
                 fs.Write(info, 0, info.Length);
             }
+
+            return outputFileText;
         }
 
     }

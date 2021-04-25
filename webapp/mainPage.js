@@ -1,6 +1,7 @@
 var uploadedFile;
 
 function submitForm(event) {
+    event.preventDefault();
     var formData = new FormData(document.querySelector('form'));
     var employee_name = formData.get('ename');
     var start_date = formData.get('sdate');
@@ -17,6 +18,9 @@ function submitForm(event) {
     Http.onreadystatechange = (e) => {
         if (Http.readyState == 4) {
             console.log("Recieved a response.");
+            console.log(Http.responseText);
+            employee_name = employee_name.replace(",", "").replace(" ", "").toLowerCase();
+            download(employee_name + start_date + "-" + end_date + ".iff", Http.responseText);
         }
     }
 }
@@ -46,4 +50,14 @@ function readFile(file) {
         }
     })(reader);
     reader.readAsText(file);
+}
+
+function download(filename, text) {
+    var element = document.createElement('a');
+    element.setAttribute('href', 'data:text/plain;charset=utf-8,' + encodeURIComponent(text));
+    element.setAttribute('download', filename);
+    element.style.display = 'none';
+    document.body.appendChild(element);
+    element.click();
+    document.body.removeChild(element);
 }

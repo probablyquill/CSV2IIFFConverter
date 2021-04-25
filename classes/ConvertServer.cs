@@ -5,10 +5,10 @@ using System.Net.Sockets;
 using System.Text;  
 using System.Threading; 
 using System.Threading.Tasks;
+using System.Diagnostics;
 
 namespace CSV2FLL {
     class ConvertServer {
-        IPAddress localAddr = IPAddress.Parse("127.0.0.1");
         HttpListener server;
         String url = "http://localhost:2002/";
         String path;
@@ -20,7 +20,7 @@ namespace CSV2FLL {
             server.Prefixes.Add(url);
             server.Start();
             Console.WriteLine("Listening for connections on " + url);
-
+            startBrowser(url);
             Task listenTask = incommingConnection();
             listenTask.GetAwaiter().GetResult();
         }
@@ -110,16 +110,17 @@ namespace CSV2FLL {
                         CSVParser parser = new CSVParser();
                         TotalData dataFound = parser.parseData(splitCSV);
                         EditedData culledData = parser.cullData(splitData[1], splitData[2], dataFound);
-                        parser.generateIFF(culledData, filename, splitData[0]);
-
-                        byte[] data = Encoding.UTF8.GetBytes("");
+                        String textResponse = parser.generateIFF(culledData, filename, splitData[0]);
+                        
+                        byte[] data = Encoding.UTF8.GetBytes(textResponse);
                         clientResp.ContentType = "text";
                         clientResp.ContentEncoding = Encoding.UTF8;
                         clientResp.ContentLength64 = data.LongLength;
                         clientResp.StatusCode = (int) HttpStatusCode.OK;
                         clientResp.StatusDescription = "OK";
                         clientResp.KeepAlive = false;
-                        //await clientResp.OutputStream.WriteAsync(data, 0, data.Length);
+                        Console.WriteLine("Sending response.");
+                        await clientResp.OutputStream.WriteAsync(data, 0, data.Length);
                     } else {
                         Console.WriteLine(clientReq.Url.AbsolutePath);
                     }
@@ -174,5 +175,11 @@ namespace CSV2FLL {
             return -1;
         }
 
+        private void startBrowser(String url) {
+            Process myProcess = new Process();
+            myProcess.StartInfo.UseShellExecute = true;
+            myProcess.StartInfo.FileName = url;
+            myProcess.Start();
+        }
     }
 }
