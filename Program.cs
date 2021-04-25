@@ -7,7 +7,7 @@ namespace CSV2FLL
         static void Main(string[] args)
         {
             CSVParser finalParser = new CSVParser();
-            TotalData dataFound = finalParser.parseData("2021.csv");
+            TotalData dataFound = finalParser.parseData("Example.csv");
             EditedData culledData = finalParser.cullData("3/1/2021", "5/16/2021", dataFound);
 
             Console.WriteLine(culledData.toString());
