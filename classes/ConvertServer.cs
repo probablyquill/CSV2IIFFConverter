@@ -90,6 +90,39 @@ namespace CSV2FLL {
                         //Caching a list of files in the webapp folder and searching the GET queries
                         //against it.
                     }
+                } else if (clientReq.HttpMethod == "POST") {
+                    if (clientReq.Url.AbsolutePath == "/convert_data") { 
+                        Console.WriteLine("Convert request recieved.");
+                        StreamReader reader = new StreamReader(clientReq.InputStream, clientReq.ContentEncoding);
+                        String dataSent = reader.ReadToEnd();
+                        
+                        String[] splitData = dataSent.Split("|");
+                        String csvText = splitData[splitData.Length - 1];
+                        String[] splitCSV = csvText.Split("\n");
+                        String filename = splitData[0].Replace(" ", "").Replace(",", "").ToLower();
+                        filename += splitData[1].Replace("/", "") + "-" + splitData[2].Replace("/", "") + ".iff";
+
+                        Console.WriteLine("LOOK HERE");
+                        for (int i = 0; i < splitData.Length; i++) {
+                            Console.WriteLine(splitData[i]);
+                        }
+
+                        CSVParser parser = new CSVParser();
+                        TotalData dataFound = parser.parseData(splitCSV);
+                        EditedData culledData = parser.cullData(splitData[1], splitData[2], dataFound);
+                        parser.generateIFF(culledData, filename, splitData[0]);
+
+                        byte[] data = Encoding.UTF8.GetBytes("");
+                        clientResp.ContentType = "text";
+                        clientResp.ContentEncoding = Encoding.UTF8;
+                        clientResp.ContentLength64 = data.LongLength;
+                        clientResp.StatusCode = (int) HttpStatusCode.OK;
+                        clientResp.StatusDescription = "OK";
+                        clientResp.KeepAlive = false;
+                        //await clientResp.OutputStream.WriteAsync(data, 0, data.Length);
+                    } else {
+                        Console.WriteLine(clientReq.Url.AbsolutePath);
+                    }
                 }
             }
         }

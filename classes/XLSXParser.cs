@@ -8,7 +8,7 @@ namespace CSV2FLL
 {
     class CSVParser
     {
-        public TotalData parseData(String filepath) {
+        public TotalData parseData(String[] filepath) {
             TotalData dataFound = new TotalData();
 
             Double totalHours = 0;
@@ -17,10 +17,10 @@ namespace CSV2FLL
             int datesIndex = -1;
 
 
-            String[] fileLines = System.IO.File.ReadAllLines(@filepath);
+            //String[] fileLines = System.IO.File.ReadAllLines(@filepath);
             List<String[]> splitStrings = new List<String[]>();
 
-            foreach (String line in fileLines) {
+            foreach (String line in filepath) {
                 String[] split = line.Split(",");
                 splitStrings.Add(split);
             }
