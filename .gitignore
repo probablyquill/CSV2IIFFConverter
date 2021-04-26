@@ -4,3 +4,4 @@ obj/
 *.iff
 *.json
 !Example.csv
+.DS_Store

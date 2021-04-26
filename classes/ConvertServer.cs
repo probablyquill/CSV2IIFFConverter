@@ -153,6 +153,7 @@ namespace CSV2FLL {
 
         private String getPath() {
             String tempPath = System.IO.Path.GetFullPath("index.html");
+            tempPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
             String[] updatedPath = tempPath.Split("\\");
             tempPath = "";
 
