@@ -121,6 +121,8 @@ namespace CSV2FLL {
                         clientResp.KeepAlive = false;
                         Console.WriteLine("Sending response.");
                         await clientResp.OutputStream.WriteAsync(data, 0, data.Length);
+                    } else if (clientReq.Url.AbsolutePath == "/shutdown") {
+                        running = false;
                     } else {
                         Console.WriteLine(clientReq.Url.AbsolutePath);
                     }
@@ -150,7 +152,7 @@ namespace CSV2FLL {
         }
 
         private String getPath() {
-            String tempPath = System.IO.Path.GetFullPath("Program.cs");
+            String tempPath = System.IO.Path.GetFullPath("index.html");
             String[] updatedPath = tempPath.Split("/");
             tempPath = "";
 
