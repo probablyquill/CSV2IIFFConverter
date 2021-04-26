@@ -41,7 +41,7 @@ namespace CSV2FLL {
 
                 if (clientReq.HttpMethod == "GET") {
                     if (clientReq.Url.AbsolutePath == "/") {
-                        String pageInfo = loadPageData("webapp/index.html");
+                        String pageInfo = loadPageData(this.path + "/webapp/index.html");
                         byte[] data = Encoding.UTF8.GetBytes(pageInfo);
 
                         clientResp.ContentType = "text/html";
@@ -77,7 +77,7 @@ namespace CSV2FLL {
                             fileToServe = "Error: 404";
                             clientResp.ContentType = "text/html";
                         } else {
-                            fileToServe = loadPageData("webapp/" + this.webFiles[fileLocation]);
+                            fileToServe = loadPageData(this.path + "/webapp/" + this.webFiles[fileLocation]);
                         }
 
                         byte[] data = Encoding.UTF8.GetBytes(fileToServe);
@@ -131,6 +131,7 @@ namespace CSV2FLL {
         }
 
         public String loadPageData(String filepath) {
+            Console.WriteLine("FILEPATH HERE: " + filepath);
             String[] file = System.IO.File.ReadAllLines(filepath);
             String output = "";
             foreach (String item in file) {
@@ -154,12 +155,8 @@ namespace CSV2FLL {
         private String getPath() {
             String tempPath = System.IO.Path.GetFullPath("index.html");
             tempPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-            String[] updatedPath = tempPath.Split("/");
-            tempPath = "";
 
-            for (int i = 0; i < updatedPath.Length - 1; i++) {
-                tempPath += updatedPath[i] + "/";
-            }
+            Console.WriteLine("TEMP PATH = " + tempPath);
             return tempPath;
         }
 
