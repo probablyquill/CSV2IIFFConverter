@@ -131,7 +131,6 @@ namespace CSV2FLL {
         }
 
         public String loadPageData(String filepath) {
-            Console.WriteLine("FILEPATH HERE: " + filepath);
             String[] file = System.IO.File.ReadAllLines(filepath);
             String output = "";
             foreach (String item in file) {
@@ -155,8 +154,7 @@ namespace CSV2FLL {
         private String getPath() {
             String tempPath = System.IO.Path.GetFullPath("index.html");
             tempPath = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetEntryAssembly().Location);
-
-            Console.WriteLine("TEMP PATH = " + tempPath);
+            String[] updatedPath = tempPath.Split("/");
             return tempPath;
         }
 

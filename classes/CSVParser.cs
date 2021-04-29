@@ -9,22 +9,27 @@ namespace CSV2FLL
     class CSVParser
     {
         public TotalData parseData(String[] filepath) {
+            //Initialize values, items are set to -1 so that they can be checked later: if the items are 
+            //still -1 the program knows that some problem has occured.
             TotalData dataFound = new TotalData();
-
             Double totalHours = 0;
             int arrivedIndex = -1;
             int leftIndex = -1;
             int datesIndex = -1;
 
-
-            //String[] fileLines = System.IO.File.ReadAllLines(@filepath);
+            //List of String arrays which will store the information parsed from the CSV file.
             List<String[]> splitStrings = new List<String[]>();
 
+            //Iterates through the given array of strings and creates a List of arrays, with the String 
+            //arrays being split based on the commas from the CSV file. Importantly, this assumes that there are 
+            //no commas used outside of item splits.
             foreach (String line in filepath) {
                 String[] split = line.Split(",");
                 splitStrings.Add(split);
             }
 
+            //Iterates through the first line pulled from the CSV file to find what columns are the ones which
+            //the program is interested in.
             String[] indexFinder = splitStrings[0];
             for (int i = 0; i < indexFinder.Length; i++) {
                 String item = indexFinder[i];
@@ -46,6 +51,8 @@ namespace CSV2FLL
                 }
             }
 
+            //If any index is still set to -1, then some identifier could not be concretely found, and so
+            //the program assumes a preset format for data entry.
             if (arrivedIndex == -1 || datesIndex == -1 || leftIndex == -1) {
                 Console.WriteLine("Error: Data is not tagged correctly. Assuming the following format:");
                 Console.WriteLine("Date | Time Arrived | Time Left");
@@ -54,6 +61,9 @@ namespace CSV2FLL
                 datesIndex = 0;
             }
 
+            //Iterates through the lines pulled from the CSV file, starting with the second line. Saves the information
+            //to the appropriate places in the TotalData object created at the beginning of the method. Also saves the
+            //locations of incorrect data entries.
             for (int i = 1; i < splitStrings.Count; i++) {
                 String[] info = splitStrings[i];
                 if (info[datesIndex] != "" && info[arrivedIndex] != "" && info[leftIndex] != "") {
@@ -66,6 +76,8 @@ namespace CSV2FLL
                 
             }
 
+            //Converts the data from the format "8:00AM" to "8:00:00" and then takes the difference between the time arrivef
+            //and the time left.
             DateTime dt;
             TimeSpan ts;
             String[] hoursMinutesSeconds = new String[3];
@@ -75,7 +87,12 @@ namespace CSV2FLL
                 ts = dt.Subtract(DateTime.Parse(dataFound.arrived[i]));
                 hoursMinutesSeconds = ts.ToString().Split(":");
                 timeSpent = Double.Parse(hoursMinutesSeconds[0]) + (Double.Parse(hoursMinutesSeconds[1])/60);
-                dataFound.hours.Add(timeSpent);
+                if (timeSpent > 0) {
+                    dataFound.hours.Add(timeSpent);
+                } else {
+                    dataFound.incorrectEntry.Add(i);
+                }
+                
             }
             foreach (Double hour in dataFound.hours) {
                 totalHours += hour;
@@ -83,10 +100,11 @@ namespace CSV2FLL
             return dataFound;
         }
 
+        //Takes the TotalData object created by the parser and converts it into an EditedData object based on the entered
+        //start and end dates.
         public EditedData cullData(String startDay, String endDay, TotalData totalData) {
             EditedData culledData = new EditedData();
             Boolean startFound = false;
-            startFound = false;
 
             for (int j = 0; j < totalData.dates.Count; j++) {
                 String[] readDataDateString = totalData.dates[j].Split("/");
@@ -111,7 +129,6 @@ namespace CSV2FLL
                     trueStartDate = new DateTime(startDate[2], startDate[0], startDate[1]);
                     trueEndDate = new DateTime(endDate[2], endDate[0], endDate[1]);
                 } catch (Exception e) {
-                    Console.WriteLine("An error has occured: " + e);
                     culledData.totalHours = -1;
                     return culledData;
                 }
