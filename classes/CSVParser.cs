@@ -76,7 +76,7 @@ namespace CSV2FLL
                 
             }
 
-            //Converts the data from the format "8:00AM" to "8:00:00" and then takes the difference between the time arrivef
+            //Converts the data from the format "8:00AM" to "8:00:00" and then takes the difference between the time arrived
             //and the time left.
             DateTime dt;
             TimeSpan ts;
