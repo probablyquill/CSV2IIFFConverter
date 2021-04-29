@@ -56,9 +56,14 @@ namespace CSV2FLL
 
             for (int i = 1; i < splitStrings.Count; i++) {
                 String[] info = splitStrings[i];
-                dataFound.dates.Add(info[datesIndex]);
-                dataFound.arrived.Add(info[arrivedIndex]);
-                dataFound.left.Add(info[leftIndex]);
+                if (info[datesIndex] != "" && info[arrivedIndex] != "" && info[leftIndex] != "") {
+                    dataFound.dates.Add(info[datesIndex]);
+                    dataFound.arrived.Add(info[arrivedIndex]);
+                    dataFound.left.Add(info[leftIndex]);
+                } else {
+                    dataFound.incorrectEntry.Add(i);
+                }
+                
             }
 
             DateTime dt;
@@ -98,6 +103,11 @@ namespace CSV2FLL
 
                 try {
                     dataDate = new DateTime(readDataDate[2], readDataDate[0], readDataDate[1]);
+                } catch (Exception e) {
+                    culledData.totalHours = -3;
+                    return culledData;
+                }
+                try {
                     trueStartDate = new DateTime(startDate[2], startDate[0], startDate[1]);
                     trueEndDate = new DateTime(endDate[2], endDate[0], endDate[1]);
                 } catch (Exception e) {
@@ -105,7 +115,10 @@ namespace CSV2FLL
                     culledData.totalHours = -1;
                     return culledData;
                 }
-
+                if (trueEndDate < trueStartDate) {
+                    culledData.totalHours = -2;
+                    return culledData;
+                }
                 if (startFound == false) {
                     if (dataDate >= trueStartDate) {
                         //Console.WriteLine(dataDate.ToString() + " >= " + trueStartDate.ToString());
@@ -135,7 +148,20 @@ namespace CSV2FLL
 
         public String generateIFF(EditedData workedDaysHours, String filelocation, String employee) {
             if (workedDaysHours.totalHours == -1) {
-                return "An error has occured.";
+                return "Error1";
+            }else if (workedDaysHours.totalHours == -2) {
+                return "Error2";
+            }
+            switch (workedDaysHours.totalHours) {
+                case -1:
+                return "Error1";
+                break;
+                case -2:
+                return "Error2";
+                break;
+                case -3:
+                return "Error3";
+                break;
             }
             DateTime currentDate = DateTime.Now;
             String outputFileText = "!HDR   PROD    VER REL IIFVER  DATE    TIME    ACCNTNT     ACCNTNTSPLITTIME";
@@ -144,7 +170,7 @@ namespace CSV2FLL
             
             for (int i = 0; i < workedDaysHours.daysWorked.Count; i++) {
                 outputFileText += "\nTIMEACT    " + workedDaysHours.daysWorked[i].ToString("MM/dd/yyyy") + "    "; //Add date
-                outputFileText += "Stream Station Inc.   Tate, Elijah   Labor   Employee    "; //Misc info for setup.
+                outputFileText += "Stream Station Inc.   " + employee + "   Labor   Employee    "; //Misc info for setup.
                 outputFileText += Math.Round(workedDaysHours.hoursPerDay[i], 2) + "   In Office Work   N";
             }
 

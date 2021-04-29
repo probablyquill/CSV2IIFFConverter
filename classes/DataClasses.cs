@@ -49,12 +49,14 @@ namespace CSV2FLL
             public List<String> arrived;
             public List<String> left;
             public List<Double> hours;
+            public List<int> incorrectEntry;
 
             public TotalData() {
                 dates = new List<String>();
                 arrived = new List<String>();
                 left = new List<String>();
                 hours = new List<Double>();
+                incorrectEntry = new List<int>();
             }
             public TotalData(List<String> dates, List<String> arrived, List<String> left, List<Double> hours) {
                 this.dates = dates;

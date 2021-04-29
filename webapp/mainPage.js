@@ -22,7 +22,13 @@ function submitForm(event) {
             if (Http.responseText == "An error has occured." || Http.responseText == "") {
                 console.log("An error has occured.");
                 alert("An error has occured while converting the data. Please make sure that all of the date information was entered correctly.");
-            } else {
+            } else if(Http.responseText == "Error1") {
+                alert("An error has occured: Either the start or end date was entered incorrectly.");
+            } else if(Http.responseText == "Error2") {
+                alert("An error has occured: The end date is before the start date.");
+            } else if(Http.responseText == "Error3") {
+                alert("An error has occured: There was a problem parsing the CSV dates."); 
+            }else {
                 employee_name = employee_name.replace(",", "").replace(" ", "").toLowerCase();
                 download(employee_name + start_date + "-" + end_date + ".iff", Http.responseText);
             }
