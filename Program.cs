@@ -23,3 +23,5 @@ namespace CSV2FLL
 //2.) Add checks to make sure that all dates entered into the CSV or webapp are reachable,
 //i.e. make sure that there are no entires like "2/30/2020."
 //3.) Make sure that the converter actually works -> can't do this one on my own.
+//4.) Overload the generateIFF function to make one which returns a string and 
+//one which outputs a file.

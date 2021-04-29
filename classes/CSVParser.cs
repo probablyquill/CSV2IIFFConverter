@@ -148,6 +148,7 @@ namespace CSV2FLL
                 outputFileText += Math.Round(workedDaysHours.hoursPerDay[i], 2) + "   In Office Work   N";
             }
 
+            //Code which wrote to output file
             /*using (System.IO.FileStream fs = System.IO.File.Create(filelocation))
             {
                 byte[] info = new UTF8Encoding(true).GetBytes(outputFileText);
